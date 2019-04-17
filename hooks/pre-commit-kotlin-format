@@ -1,0 +1,24 @@
+#!/bin/sh
+
+# ktlint(https://github.com/pinterest/ktlint)が入っていることを前提とする
+
+exec < /dev/tty 
+read -p "apply ktlint format?(y/n) " answer
+case $answer in
+  y)
+    echo "applying ktlint format..."
+    for FILE in `git diff --name-only --cached --relative --staged | grep '\.kt[s"]\?$'`; do
+      ktlint -F $FILE
+      git add $FILE
+    done
+    echo "done!!"
+    ;;
+  n)
+    echo "make it better!!"
+    ;;
+  *)
+    echo "unexpected answer"
+    exit 1
+    ;;
+esac
+

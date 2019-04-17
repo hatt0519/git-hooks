@@ -1,0 +1,26 @@
+#!/bin/sh
+branch="$(git rev-parse --abbrev-ref HEAD)"
+if [ ${branch} = "develop" ]; then
+  echo "error!! this is develop branch"
+  exit 1
+fi
+if [[ ${branch} =~ (feature*|release*|hotfix*) ]]; then
+  exec < /dev/tty
+  if [ $? -gt 0 ]; then
+    exit 1
+  fi
+  read -p "this is ${branch}. Are you sure?(y/n) " sure 
+  case $sure in
+    y) 
+      echo "Let's Task!!"
+      ;;
+    n)
+      echo "danger!!"
+      exit 1
+      ;;
+    *)
+      echo "unexpected answer"
+      exit 1
+      ;;
+  esac
+fi
